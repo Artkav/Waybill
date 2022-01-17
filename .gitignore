@@ -1,0 +1,10 @@
+.idea
+
+venv
+sendemailproject/email_config.py
+__init__.py
+__pycache__/
+*/__pycache__/
+*.py[cod]
+.pyc
+
