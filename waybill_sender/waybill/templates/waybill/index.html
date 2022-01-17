@@ -1,0 +1,16 @@
+{% extends 'waybill/base.html' %}
+
+{% block title %}
+    Start page
+{% endblock %}
+
+{% block content %}
+    <center>
+        {% if user.is_authenticated %}
+            <h3>Hello {{user}}</h3>
+        {% else %}            
+            <h3 class="py-10">Для начала работы <a href="{% url 'waybill:login' %}">войдите</a>  либо <a href="{% url 'waybill:logout' %}">зарегестрируйтесь</a></h3>            
+        {% endif %}
+    </center>
+
+{% endblock %}

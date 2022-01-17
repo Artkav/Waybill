@@ -1,0 +1,16 @@
+{% extends 'waybill/base.html' %}
+
+{% block title %}
+    Start page
+{% endblock %}
+
+{% block content %}
+    <center>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Aply">
+        </form>
+    </center>
+
+{% endblock %}
