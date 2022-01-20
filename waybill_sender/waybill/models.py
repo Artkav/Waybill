@@ -22,7 +22,7 @@ class Car(models.Model):
 class Fuel(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE, related_name='fuels')
     date = models.DateTimeField(default=datetime.datetime.now)
-    tank_residue = models.FloatField(default=0)
+    tank_residue = models.FloatField()
     refueling = models.FloatField(default=0, null=True, blank=True)
     start_mileage = models.PositiveIntegerField()
     end_mileage = models.PositiveIntegerField()

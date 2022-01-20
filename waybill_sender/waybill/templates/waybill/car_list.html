@@ -1,0 +1,43 @@
+{% extends 'waybill/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{user}} car list
+{% endblock %}
+
+{% block content %}
+    <center>
+
+        {% if user.cars.all|length < 1 %}
+            <p>У вас не добавлено ни одного траспортного средства, добавьте транспорт</p>
+        {% endif %}
+
+        <h2><a href="{% url 'waybill:add-car' user.id%}">Добавить транспортное средство</a></h2>
+
+        
+        <div class="container">
+            <div class="row justify-content-center">
+                {% for car in member.cars.all %}
+                 
+                    <div class="col-sm-6 col-md-4 col-lg-3 ">
+                        <a href="{% url 'waybill:car-detail' car.id %}">  
+                            <div class="row justify-content-between border rounded">    
+                                <div class="col-3">
+                                    <img  class="img-fluid" src="{% static 'waybill/img/car.png' %}" alt="Car image">
+                                </div>    
+                                <div class="col-9">                               
+                                    <h4>{{ car.car_model }}</h4>
+                                    <br>
+                                    <h6>{{ car.state_number }}</h6>
+                                </div>
+                            </div>  
+                        </a>                      
+                    </div>
+                
+                {% endfor %}
+            </div>
+        </div>
+        
+    </center>
+
+{% endblock %}

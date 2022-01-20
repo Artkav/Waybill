@@ -1,0 +1,42 @@
+{% extends 'waybill/base.html' %}
+
+{% block title %}
+    {{ user }}
+{% endblock %}
+
+{% block content %}
+    <center>
+        <form action="" method="post">
+            {% csrf_token %}
+            <label for="car_model">Car model</label>
+            <input type="text" name='car_model' id="car_model">
+            <br>
+            <label for="vin_number">vin_number</label>
+            <input type="text" name='vin_number' id="vin_number">
+            <br>
+            <label for="state_number">state_number</label>
+            <input type="text" name='state_number' id="state_number">
+            <br>
+            <label for="consumption_per_100">consumption_per_100</label>
+            <input type="text" name='consumption_per_100' id="consumption_per_100">
+            <br>
+            <br>
+            <input type="submit" value="Save">
+        </form>
+        {% if form.errors %}
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+                <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </center>
+
+{% endblock %}

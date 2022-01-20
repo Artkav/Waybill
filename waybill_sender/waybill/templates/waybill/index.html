@@ -8,8 +8,9 @@
     <center>
         {% if user.is_authenticated %}
             <h3>Hello {{user}}</h3>
-            <a href="{% url 'waybill:create-car' %}">Добавить автомобиль</a>
-            <a href="{% url 'waybill:add-car' %}">Добавить автомобиль CreateView</a>
+            <a href="{% url 'waybill:add-car' user.id%}">Добавить автомобиль</a>
+            <br>
+            <a href="{% url 'waybill:car-list' user.id %}">Мои машины</a>
         {% else %}            
             <h3 class="py-10">Для начала работы <a href="{% url 'waybill:login' %}">войдите</a>  либо <a href="{% url 'waybill:logout' %}">зарегестрируйтесь</a></h3>            
         {% endif %}
