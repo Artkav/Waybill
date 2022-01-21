@@ -12,5 +12,6 @@ urlpatterns = [
     path('add_car_with_CreateView/<int:pk>', views.CreateCarView.as_view(), name='add-car'),
     path('user_car_list/<int:pk>', views.UserDetailView.as_view(), name='car-list'),
     path('car/<int:pk>', views.CarDetailView.as_view(), name='car-detail'),
-    path('add report/<int:car_id>', views.add_daily_report, name='add-daily-report')
+    path('add report/<int:car_id>', views.add_daily_report, name='add-daily-report'),
+    path('add first report/<int:car_id>', views.add_first_data, name='add-first-data'),
 ]

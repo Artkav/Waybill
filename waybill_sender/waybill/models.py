@@ -4,15 +4,15 @@ import datetime
 from django.urls import reverse
 
 
-# class ApdateUser(AbstractUser):
-#     email_for_reporst = models.EmailField(max_length=256, blank=True, null=True)
+class UpdateUser(AbstractUser):
+    email_for_report = models.EmailField(max_length=256, blank=True, null=True)
 
 
 class Car(models.Model):
     car_model = models.CharField(max_length=128)
     vin_number = models.CharField(max_length=128)
     state_number = models.CharField(max_length=128)
-    car_driver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='cars') #ApdateUser
+    car_driver = models.ForeignKey(UpdateUser, on_delete=models.CASCADE, related_name='cars') #UpdateUser
     consumption_per_100 = models.FloatField(default=8.0)
 
     def url(self):

@@ -22,53 +22,78 @@
                     <h6> {{ car.state_number }}</h3>
                 </div>
                 <div class="col-3">
-                    <h4>Vin</h4>
-                    <h6> {{ car.vin_number }}</h3>
+                    <h4>Расход топлива</h4>
+                    <h6> {{ car.consumption_per_100 }} л на 100 км</h3>
                 </div>
             </div>
             <hr>
             <div class="row">
 
-                <form action="{% url 'waybill:add-daily-report' car.id %}" id="my_form" method="post">
-                    {% csrf_token %}
-                </form>
+                {% if car.fuels.all|length == 0 %}
+                    <div class="col-12">
+                        <h3>Необходимо добавить данные автомобиля для начала работы<h3>
+                    </div>
+                    
+                    <form action="{% url 'waybill:add-first-data' car.id %}"  method="post">
+                        {% csrf_token %}
+                                <label for="start_mileage">Пробег автомобиля на данный момент</label>
+                                <input type="text" name='start_mileage'>
+                                <label for="tank_residue">Объём топлива в баке автомобиля на данный момент</label>
+                                <input type="text" name="tank_residue">       
+                                <input type="submit" value="Добавить">                     
+                    </form>
 
-                <table class="table table-striped text-center table-bordered">
-                    <thead>
-                        <tr>
-                        <th scope="col">Дата</th>
-                        <th scope="col">Пробег при выезде</th>
-                        <th scope="col">Пробег при возвращении</th>
-                        <th scope="col">Остаток в баке</th>
-                        <th scope="col">Заправка</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                {% else %}
+                    <form action="{% url 'waybill:add-daily-report' car.id %}" id="my_form" method="post">
+                        {% csrf_token %}
+                    </form>
+
+                    <table class="table table-striped text-center table-bordered">
+                        <thead>
                             <tr>
-                                <th scope="row"></th>
-                                <td><input type="text" form="my_form" name='start_mileage'></td>
-                                <td><input type="text" form="my_form" name='end_mileage'></td>
-                                <td><input type="text" form="my_form" name='tank_residue'></td>
-                                <td><input type="text" form="my_form" name='refueling'></td>
-                            </tr>
-                            <tr>
-                                <td colspan="5" >
-                                    <input type="submit" value='Добавить' form="my_form">
-                                </td>                                
-                            </tr>                       
-                        {% for fuel in car.fuels.all %}
-                            <tr>
-                                <th scope="row">{{fuel.date}}</th>
-                                <td>{{fuel.start_mileage}}</td>
-                                <td>{{fuel.end_mileage}}</td>
-                                <td>{{fuel.tank_residue}}</td>
-                                <td>{{fuel.refueling}}</td>
-                            </tr>
+                            <th scope="col">Дата</th>
+                            <th scope="col">Пробег при выезде</th>
+                            <th scope="col">Пробег при возвращении</th>
+                            <th scope="col">Заправка</th>
+                            <th scope="col">Остаток в баке</th>
                             
-                        {% endfor %}
-                        
-                    </tbody>
-                </table>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <tr>
+                                    <th scope="row"></th>
+                                    <td><input type="text" form="my_form" name='start_mileage' 
+                                        {% if car.fuels.all.first.end_mileage == 0 %}
+                                            value = "{{ car.fuels.all.first.start_mileage }}"
+                                        {% else %}
+                                            value = "{{ car.fuels.all.first.end_mileage }}"
+                                        {% endif %}
+                                        ></td>
+                                    <td><input type="text" form="my_form" name='end_mileage'></td>
+                                    <td><input type="text" form="my_form" name='refueling'></td>
+                                    <td><label  form="my_form" name='tank_residue'> {{car.fuels.all.first.tank_residue}}</label></td>
+                                    
+                                </tr>
+                                <tr>
+                                    <td colspan="5" >
+                                        <input type="submit" value='Добавить' form="my_form">
+                                    </td>                                
+                                </tr>                       
+                            {% for fuel in car.fuels.all %}
+                                <tr>
+                                    <th scope="row">{{fuel.date}}</th>
+                                    <td>{{fuel.start_mileage}} км</td>
+                                    <td>{{fuel.end_mileage}} км</td>
+                                    <td>{{fuel.refueling}} л</td>
+                                    <td>{{fuel.tank_residue}} л</td>
+                                    
+                                </tr>
+                                
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+                {% endif %}
             </div>
         </div>
         
