@@ -10,7 +10,9 @@
             <h3>Hello {{user}}</h3>
             <a href="{% url 'waybill:add-car' user.id%}">Добавить автомобиль</a>
             <br>
-            <a href="{% url 'waybill:car-list' user.id %}">Мои машины</a>
+            {% if user.cars.all|length >= 1%}
+                <a href="{% url 'waybill:car-list' user.id %}">Мои машины</a>
+            {% endif %}
         {% else %}            
             <h3 class="py-10">Для начала работы <a href="{% url 'waybill:login' %}">войдите</a>  либо <a href="{% url 'waybill:logout' %}">зарегестрируйтесь</a></h3>            
         {% endif %}

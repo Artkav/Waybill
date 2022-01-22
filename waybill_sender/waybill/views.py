@@ -2,6 +2,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import ValidationError
 from django.views.generic.list import ListView
 from django.views.generic import DetailView
 from django.http import HttpResponseRedirect, HttpResponse
@@ -21,7 +22,7 @@ def index(request):
 
 class RegisterUser(CreateView):
     form_class = CreateUserForm
-    template_name = 'waybill/register_login.html'
+    template_name = 'waybill/register.html'
 
     def form_valid(self, form):
         user = form.save()
@@ -31,7 +32,7 @@ class RegisterUser(CreateView):
 
 class LoginUser(LoginView):
     form_class = AuthenticationForm
-    template_name = 'waybill/register_login.html'
+    template_name = 'waybill/login.html'
     next_page = reverse_lazy('waybill:index')
 
 
@@ -58,7 +59,7 @@ class CarListView(ListView):
 
 
 class UserDetailView(DetailView):
-    model = User
+    model = UpdateUser
     template_name = 'waybill/car_list.html'
     context_object_name = 'member'
 
@@ -87,12 +88,13 @@ def send_email(fuel):
               f'Пробег при возвращении: {fuel.end_mileage}км \nЗаправлено топлива {fuel.refueling}л \n' \
               f'Автомобиль проехал: {fuel.end_mileage - fuel.start_mileage}км \n' \
               f'Остаток топлива в баке: {fuel.tank_residue}л'
-
+    print(message)
     to_email = fuel.car.car_driver.email_for_report
-
+    print(to_email)
     if message and to_email:
         try:
             send_mail(subject, message, settings.EMAIL_HOST_USER, [to_email])
+            print(f'Отправлено на {to_email}')
         except Exception:
             print('Что-то пошло не так')
 
@@ -104,6 +106,8 @@ def add_daily_report(request, car_id):
         refueling = 0
     start_mileage = int(request.POST.get('start_mileage'))
     if request.POST.get('end_mileage'):
+        if int(request.POST.get('end_mileage')) < start_mileage:
+            raise ValidationError('Пробег при заезде должен быть больше паробега при выезде')
         end_mileage = int(request.POST.get('end_mileage'))
     else:
         end_mileage = start_mileage
